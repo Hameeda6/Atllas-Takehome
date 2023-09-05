@@ -1,0 +1,13 @@
+/* AddUserPopup.module.css */
+.popup {
+    background-color: white;
+    padding: 1rem;
+  }
+  
+  .mobile-popup {
+    position: absolute;
+    left: 1%;
+    top: 5%;
+    margin: auto;
+  }
+  

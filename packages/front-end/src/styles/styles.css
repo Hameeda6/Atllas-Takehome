@@ -1,0 +1,11 @@
+
+@media (max-width: 640px) {
+    .mobile-popup {
+      position: absolute;
+      left: 0;
+      top: 0;
+      margin: auto;
+    }
+
+  }
+  
