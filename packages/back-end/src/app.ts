@@ -1,4 +1,7 @@
-import express, { Express, Request, Response, NextFunction } from 'express';
+
+import express from 'express'
+//import express from 'express';
+//import { Express, Request, Response, NextFunction } from 'express-serve-static-core';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import { readdirSync, statSync } from 'fs';
@@ -12,6 +15,7 @@ import { Op } from 'sequelize';
 
 
 const app = express();
+
 const appCfg = {
   port: parseInt(process.env.EXPRESS_PORT) || 50000,
   hostname: process.env.EXPRESS_HOST ?? '127.0.0.1',
@@ -31,7 +35,7 @@ app.use(express.json());
 
 const _ROUTES_ROOT = resolve(join(__dirname, './routes/'));
 const queue = readdirSync(_ROUTES_ROOT)
-  .map(entry => join(_ROUTES_ROOT, entry))
+  .map(entry => join(_ROUTES_ROOT, entry)) 
   .filter(isFile);
 
 //injecting each item in the queue as an API route

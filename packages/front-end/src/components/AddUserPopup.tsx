@@ -91,7 +91,7 @@ const AddUserPopup: React.FC<AddUserPopupProps> = ({
 
 
   return (
-  <div className={`fixed inset-0 flex items-center justify-center sbg-gray-800 bg-opacity-75 ${isVisible ? 'block' : 'hidden'} `}>
+  <div className={`fixed inset-0 flex items-center justify-center bg-black sbg-gray-800 bg-opacity-75 ${isVisible ? 'block' : 'hidden'} `}>
 {/* <div className={`bg-white p-4 rounded shadow-md md:p-4 ${isMobile ? 'mobile-popup' : ''}`}> */}
 <div className={`bg-white p-4 rounded shadow-md md:p-4 ${isMobile ? styles['mobile-popup'] : styles.popup}`}>
  

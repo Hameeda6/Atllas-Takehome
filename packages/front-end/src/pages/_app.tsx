@@ -22,8 +22,9 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   const [selectedUserId, setSelectedUserId] = useState<string>('');
   const [searchButtonClicked, setSearchButtonClicked] = useState(false); 
   const [deleteConfirmationPosition, setDeleteConfirmationPosition] = useState<{ top: string; left: string }>({ top: '0px', left: '0px' });
-
-  
+  //const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [isMobile, setIsMobile] = useState(false);
+ 
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:50000/users');
@@ -39,6 +40,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     fetchUsers(); // Initial fetch when app loads
   }, []);
 
+
+  useEffect(() => {
+    // Step 1: Set up an event listener for window resize
+    const handleResize = () => {
+      console.log("Window Width:", window.innerWidth, "Is Mobile:", isMobile);
+      setIsMobile(window.innerWidth <= 640);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Step 1: Cleanup the event listener on component unmount
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   const handleEdit = (userId) => {
     const updatedUsers = users.map((user) =>
@@ -192,8 +208,8 @@ const fetchData = async (sortField: string, sortOrder: string) => {
         <h1 className='border-b border-neutral-300 px-4 py-2 text-2xl font-medium text-center'>
           User Management
         </h1>
-        <div className='flex justify-center mt-4 space-x-4'>
-          <button className='border border-gray-300 p-2 sm:p-3 lg:p-2 rounded-lg text-center hover:bg-gray-200 hover:border-gray-400 sm:w-40 sm:h-10 lg:w-40 lg:h-10' onClick={() => setIsAddPopupVisible(true)}>
+        <div className='flex justify-center mt-4 space-x-1'>
+          <button className='border border-gray-300 p-2 sm:p-3 lg:p-2 rounded-lg text-center bg-grey-500 font-bold hover:bg-gray-200 hover:border-gray-400 sm:w-40 sm:h-10 lg:w-40 lg:h-10' onClick={() => setIsAddPopupVisible(true)}>
             Add New User
           </button>
           
@@ -203,24 +219,22 @@ const fetchData = async (sortField: string, sortOrder: string) => {
             placeholder='Search'
             onChange={(e) => setSearchInput(e.target.value)}
           />
-           <button className='border border-gray-300 p-2 sm:p-3 lg:p-2 text-center rounded-lg hover:bg-gray-200 hover:border-gray-400 sm:w-32 lg:w-32 sm:h-6 lg:h-10' onClick={handleSearch}>Search</button>
+           <button className='border border-gray-300 p-2 sm:p-3 lg:p-2 text-center rounded-lg hover:bg-gray-200 hover:border-gray-400 bg-grey-500 font-bold sm:w-32 lg:w-32 sm:h-6 lg:h-10' onClick={handleSearch}>Search</button>
            
            {searchButtonClicked && searchInput && ( 
           <button
-            className='border border-gray-300 p-2 sm:p-3 lg:p-2 rounded-lg hover:bg-gray-200 hover:border-gray-400 sm:w-32 lg:w-32 sm:h-6 lg:h-10'
+            className='border border-gray-300 p-2 sm:p-3 lg:p-2 rounded-lg font-bold hover:bg-gray-200 hover:border-gray-400 sm:w-32 lg:w-32 sm:h-6 lg:h-10'
             onClick={handleClearSearch}
           >
             Clear
           </button>
         )}
-
-          
         </div>
         <div className='table-container mt-4'>
           <table className='table w-full border-collapse border border-gray-300'>
             <thead>
               <tr className='bg-gray-200'>
-              <th className="p-2 sm:p-3 border border-gray-300 ">
+              <th className="p-2 w-16 sm:p-3 border border-gray-300 ">
       <div className="flex items-center space-x-1">
         ID
         <img
@@ -242,7 +256,7 @@ const fetchData = async (sortField: string, sortOrder: string) => {
             />
           )}
         </th>
-        <th className="p-2 w-36 sm:w-24 border border-gray-300">
+        <th className="p-2 w-48 sm:w-24 border border-gray-300">
             <div className="flex items-center justify-center space-x-1">
               First Name
               <img
@@ -265,7 +279,7 @@ const fetchData = async (sortField: string, sortOrder: string) => {
             )}
           </th>
 
-            <th className="p-2 border border-gray-300 sm:w-40">
+            <th className="p-2 w-36 border border-gray-300 sm:w-40">
           <div className="flex items-center justify-center space-x-1">
             Middle Name
             <img
@@ -331,10 +345,14 @@ const fetchData = async (sortField: string, sortOrder: string) => {
                 setOpenSortField(null); // Close the popup
               }}
             />
-          )}
-        </th>
-                <th className='p-2 border border-gray-300 sm:w-40'>Phone Number</th>
-                <th className='p-2 sm:w-40 border border-gray-300'>Address</th>
+          )} 
+        </th> 
+              
+                <th className='p-2 border border-gray-300 sm:w-40'>Phone Number </th>
+                <th className={`p-2 border border-gray-300 ${isMobile ? 'hidden' : 'sm:w-40'}`}>Address</th>
+
+
+                {/* <th className={`p-2 border border-gray-300 ${isMobile ? 'sm:hidden' : 'sm:w-40'}`}>Address</th> */}
                 <th className='p-2  sm:w-40 border border-gray-300'>Admin Notes</th>
                 <th className='p-2 border border-gray-300 sm:w-40'>Action Item</th> 
               </tr>
@@ -492,13 +510,13 @@ const fetchData = async (sortField: string, sortOrder: string) => {
       <td className='p-2 hover:bg-gray-200'>
   {user.isEditMode ? (
     <div className='flex space-x-2'>
-      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-blue-500' onClick={() => handleSave(user.id)}>Save</span>
+      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-black-500 bg-blue-500 font-bold' onClick={() => handleSave(user.id)}>Save</span>
       {/* <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-blue-500' onClick={() => handleEdit(user.id)}>Edit</span> */}
     </div>
   ) : (
     <div className='flex space-x-2'>
-      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-blue-500' onClick={() => handleEdit(user.id)}>Edit</span>
-      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-blue-500' onClick={() => handleDelete(user.id, event)}>Delete</span>
+      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-black-500 bg-green-500 font-bold' onClick={() => handleEdit(user.id)}>Edit</span>
+      <span className='cursor-pointer px-2 py-1 border rounded border-gray-300 hover:bg-gray-100 text-black-500 bg-red-500 font-bold' onClick={() => handleDelete(user.id, event)}>Delete</span>
     </div>
   )}
 </td>

@@ -1,11 +1,13 @@
 {
-  "compilerOptions": {
+   "compilerOptions": {
     "strict": false,
     "target": "ESNext",
     "module": "CommonJS",
 
     "esModuleInterop": true,
-    "allowJs": true,
+    // "allowJs": true,
     "skipLibCheck": true,
-  }
-}
+  }}
+
+
+
